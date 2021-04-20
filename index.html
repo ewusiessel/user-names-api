@@ -42,8 +42,93 @@
       EXTRA)
       Visualize on a Google Map plugin all the users (using lat & lng)
     -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        #content {
+        width: 80%;
+        margin: 0 auto;
+        margin-top: 100px;
+        
+      }
+    </style>
   </head>
+  
   <body>
+      <div class="container" id='content'>
+          <div class="input-group my-3">
+  <input type="text" id='inputField' onkeyup='querySearch()' class="form-control" aria-label="Text input with dropdown button">
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select</button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" onclick = 'display("name")' id="name" href="#">Name</a>
+      <a class="dropdown-item"  onclick = 'display("username")' id="username" href="#">Username</a>
+      <a class="dropdown-item" onclick = 'display("email")' id="email" href="#">Email</a>
+      
+    </div>
+  </div>
+</div>
+          <div class="row dlex d-flex p-2"id="mainDiv"></div>
+
+      </div>
+
+<script>
+    let userData;
+    let dropDownSelect;
+const users = (userData) => {
+            let userBody = document.getElementById("mainDiv")
+            console.log(userData);
+            userBody.innerHTML = userData.map(user => `
+<div class="card p-2">
+  <img src="person-icon.png" alt="John" >
+  <h1>John Doe</h1>
+  <p class="title">CEO & Founder, Example</p>
+  <p>Harvard University</p>
+  <a href="#"><i class="fa fa-dribbble"></i></a>
+  <p><button>Contact</button></p>
+</div>`).join('')
+           }
+           function display(selected){
+                dropDownSelect = selected
+                console.log(dropDownSelect)
+           }
+
+           function querySearch(){
+               let inputField = document.getElementById('inputField')
+               console.log(inputField.value)
+            if(dropDownSelect === 'username') {
+                let result = userData.filter(user => user.username.includes(inputField.value))}
+            else if(dropDownSelect === 'email'){
+                const result = userData.filter(user => user.email.includes(inputField.value))
+            }else{
+                let result = userData.filter(user => user.name.includes(inputField.value))}
+            console.log(result)
+            }
+            
+           
+    async function userDataFunction() {
+             userData = await fetch(
+              "https://jsonplaceholder.typicode.com/users"
+              
+            );userData = await userData.json()
+            users(userData)
+           
+          
+          }
+          
+    
+          window.onload = function () {
+            userDataFunction();
+          };
+</script>
+
+
+
+
+
+
+
+
+    
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
