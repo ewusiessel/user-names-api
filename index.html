@@ -42,96 +42,226 @@
       EXTRA)
       Visualize on a Google Map plugin all the users (using lat & lng)
     -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
     <style>
-        #content {
+      #content {
         width: 80%;
         margin: 0 auto;
         margin-top: 100px;
-        
+      }
+
+      a {
+        text-decoration: none;
+        color: black;
+      }
+
+      a:hover {
+        text-decoration: none;
+        color: black;
+      }
+
+      div#input_dropdown {
+        max-width: 50%;
+        padding-right: 50px;
+      }
+
+      div#createUsers {
+        max-width: 50%;
+        padding-right: 50px;
+        margin: 0 auto;
+      }
+
+      div#usernameCreate {
+        max-width: 100%;
+        padding-bottom: 20px;
       }
     </style>
   </head>
-  
+
   <body>
-      <div class="container" id='content'>
-          <div class="input-group my-3">
-  <input type="text" id='inputField' onkeyup='querySearch()' class="form-control" aria-label="Text input with dropdown button">
-  <div class="input-group-append">
-    <button class="btn btn-outline-secondary dropdown-toggle selectedButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select</button>
-    <div class="dropdown-menu">
-      <a class="dropdown-item" onclick = 'display("name")' id="name" href="#">Name</a>
-      <a class="dropdown-item"  onclick = 'display("username")' id="username" href="#">Username</a>
-      <a class="dropdown-item" onclick = 'display("email")' id="email" href="#">Email</a>
-      
-    </div>
-  </div>
-</div>
-          <div class="row dlex d-flex p-2"id="mainDiv"></div>
+    <div class="container" id="content">
+      <div class="row">
+        <div class="col-8">
+          <div class="row dlex d-flex p-2" id="menuDiv">
+            <div class="input-group my-3" id="input_dropdown">
+              <input
+                type="text"
+                id="inputField"
+                onkeyup="querySearch()"
+                class="form-control"
+                aria-label="Text input with dropdown button"
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-outline-secondary dropdown-toggle selectedButton"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  Select
+                </button>
+                <div class="dropdown-menu">
+                  <a
+                    class="dropdown-item"
+                    onclick='display("Name")'
+                    id="name"
+                    href="#"
+                    >Name</a
+                  >
+                  <a
+                    class="dropdown-item"
+                    onclick='display("Username")'
+                    id="username"
+                    href="#"
+                    >Username</a
+                  >
+                  <a
+                    class="dropdown-item"
+                    onclick='display("Email")'
+                    id="email"
+                    href="#"
+                    >Email</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="input-group my-3" id="createUsers">
+              <button
+                type="button"
+                class="btn btn-outline-success"
+                onclick="sortUsers()"
+              >
+                Sort Users
+              </button>
+            </div>
+          </div>
+          <table class="table table-striped" id="">
+            <thead>
+              <tr>
+                <th scope="col">#Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
 
+        <div class="col-4">
+          <div class="input-group my-3" id="createUsers">
+            <button
+              type="button"
+              class="btn btn-outline-success"
+              onclick="createUsers()"
+            >
+              Create Users
+            </button>
+          </div>
+          <div id="usernameCreate"></div>
+          <div id="userAddress"></div>
+        </div>
       </div>
+    </div>
 
-<script>
-    let userData;
-    let dropDownSelect;
-const users = (userData) => {
-            let userBody = document.getElementById("mainDiv")
-            console.log(userData);
-            userBody.innerHTML = userData.map(user => `
-<div class="card p-2">
-  <img src="person-icon.png" alt="John" >
-  <h1>John Doe</h1>
-  <p class="title">CEO & Founder, Example</p>
-  <p>Harvard University</p>
-  <a href="#"><i class="fa fa-dribbble"></i></a>
-  <p><button>Contact</button></p>
-</div>`).join('')
-           }
-           function display(selected){
-               let buttonElement = document.querySelector('.selectedButton')
-               buttonElement.innerHTML = selected
-                dropDownSelect = selected
-                console.log(dropDownSelect)
-           }
+    <script>
+      let userData;
+      let dropDownSelect;
+      const users = (userData) => {
+        let userBody = document.getElementById("tableBody");
+        console.log(userData);
+        userBody.innerHTML = userData
+          .map(
+            (user) => `
+                    <tr>
+                      <th scope="row">${user.id}</th>
+                      <td><a href='#'>${user.name}</a></td>
+                      <td>${user.username}</td>
+                      <td>${user.email}</td>
 
-           function querySearch(){
-               let inputField = document.getElementById('inputField')
-               if (inputField.value.length <=1) return
-               let result;
-            if(dropDownSelect === 'username') {
-                 result = userData.filter(user => user.username.toLowerCase().includes(inputField.value))}
-            else if(dropDownSelect === 'email'){
-                 result = userData.filter(user => user.email.toLowerCase().includes(inputField.value))
-            }else{
-                 result = userData.filter(user => user.name.toLowerCase().includes(inputField.value))}
-            users(result)
-            }
-            
-           
-    async function userDataFunction() {
-             userData = await fetch(
-              "https://jsonplaceholder.typicode.com/users"
-              
-            );userData = await userData.json()
-            users(userData)
-           
-          
-          }
-          
-    
-          window.onload = function () {
-            userDataFunction();
-          };
-</script>
+                    </tr>`
+          )
+          .join("");
+      };
 
+      function display(selected) {
+        let buttonElement = document.querySelector(".selectedButton");
+        buttonElement.innerHTML = selected;
+        dropDownSelect = selected.toLowerCase();
+        console.log(dropDownSelect);
+      }
 
+      function querySearch() {
+        let inputField = document.getElementById("inputField");
+        if (inputField.value.length <= 1) {
+          let result = userData;
+          users(result);
+          return;
+        }
+        let result = userData.filter((user) =>
+          user[dropDownSelect].toLowerCase().includes(inputField.value)
+        );
+        users(result);
+      }
 
+      function createUsers() {
+        let usernameDiv = document.getElementById("usernameCreate");
+        usernameDiv.innerHTML = "";
+        let newList = document.createElement("ul.list-group");
+        newList.innerHTML = userData
+          .map(
+            (user) =>
+              `<li class="list-group-item" onclick='userAddress(${user.id})'>${user.name}</li>`
+          )
+          .join("");
+        usernameDiv.appendChild(newList);
+      }
+      function toggleClass(id) {
+        let userNameElements = document.getElementsByClassName(
+          "list-group-item"
+        );
+        let activeElement = document.getElementsByClassName("active")[0];
+        if (activeElement) activeElement.classList.remove("active");
+        userNameElements[parseInt(id - 1)].classList.toggle("active");
+      }
 
+      function userAddress(id) {
+        let targetUser = userData[parseInt(id - 1)];
+        toggleClass(id);
 
+        let userAddress = document.getElementById("userAddress");
+        userAddress.innerHTML = `<h3>Address</h3>
+                                <ul class="list-group list-group-flush">
 
+                                      <li class="list-group-item">${targetUser.address.street}, ${targetUser.address.suite}</li>
+                                      <li class="list-group-item">${targetUser.address.city}-${targetUser.address.zipcode}</li>
+                                    </ul>`;
+      }
 
+      function sortUsers() {
+        let sortedUsers = userData.sort((a, b) => {
+          return a.name.localeCompare(b.name);
+        });
 
-    
+        users(sortedUsers);
+      }
+
+      async function userDataFunction() {
+        userData = await fetch("https://jsonplaceholder.typicode.com/users");
+        userData = await userData.json();
+        users(userData);
+      }
+
+      window.onload = function () {
+        userDataFunction();
+      };
+    </script>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
